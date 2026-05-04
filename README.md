@@ -89,7 +89,7 @@ Genera dos gráficos PNG: `creation_times.png` y `query_results.png`
 python plot_bonus.py
 ```
 
-Genera scatterplots de los puntos de consulta bonus para ambos algoritmos
+Genera scatterplots de los puntos de consulta bonus para ambos algoritmos.
 
 ### Limpiar
 
