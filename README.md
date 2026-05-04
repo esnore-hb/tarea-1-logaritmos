@@ -39,6 +39,10 @@ brew install gcc make
 **Windows (WSL 2):**
 Instala Ubuntu 20.04+ desde Microsoft Store, luego ejecuta comandos de Ubuntu/Debian.
 
+**Conjunto de datos utilizados**
+Extraer los binarios de este [repositorio](https://github.com/claugaete/tarea1-cc4102-2026-1), en la sección
+`Releases` y colocarlos en la carpeta de `./data/`.
+
 ---
 
 ## Uso Rápido
