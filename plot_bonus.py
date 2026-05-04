@@ -1,4 +1,12 @@
 
+#!/usr/bin/env python3
+"""
+Script para graficar los puntos de consulta del bonus.
+Visualiza:
+1. Scatterplot de puntos consultados con Nearest-X
+2. Scatterplot de puntos consultados con Sort-Tile-Recursive
+"""
+
 import matplotlib.pyplot as plt
 import pandas as pd
 import os
@@ -9,12 +17,21 @@ ruta_archivo2 = "./query/sort-tile-recursive-europa-bonus.csv"
 
 def plot_query_results(archivo_csv, titulo, nombre_salida):
     """
-    Lee un archivo CSV con coordenadas x,y y crea un scatterplot
+    Crea un scatterplot de puntos de consulta desde un archivo CSV.
     
-    Args:
-        archivo_csv: ruta del archivo CSV
-        titulo: título del gráfico
-        nombre_salida: nombre del archivo de salida (sin extensión)
+    Descripción:
+        Lee un archivo CSV con coordenadas (x, y) de puntos de consulta
+        y genera un scatterplot visualizando la distribución espacial de
+        estos puntos en el espacio 2D.
+    
+    Parámetros de entrada:
+        archivo_csv (str): Ruta del archivo CSV con coordenadas (x, y)
+        titulo (str): Título del gráfico a mostrar
+        nombre_salida (str): Nombre base del archivo PNG de salida
+    
+    Retorna (Salida):
+        None. Genera un archivo PNG en ./plots/{nombre_salida}.png
+              e imprime mensajes de estado de la ejecución.
     """
     try:
         # Leer el archivo CSV saltando la primera fila (header)
