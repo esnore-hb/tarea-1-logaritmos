@@ -256,20 +256,40 @@ FUNCIÓN PRINCIPAL
 
 /**
  * @function main
- * @brief Función principal que coordina la lectura de puntos, construcción del
- *        R-Tree con algoritmo Sort-Tile-Recursive (STR), y escritura del
- *        resultado a disco.
+ * @brief Función principal que construye un R-Tree usando el algoritmo Sort-Tile-Recursive (STR).
+ * 
+ * Descripción:
+ *     Coordina el proceso completo de construcción de un R-Tree usando el
+ *     algoritmo Sort-Tile-Recursive (STR). Este algoritmo es superior al
+ *     Nearest-X en la minimización de solapamientos entre nodos mediante
+ *     particionamiento bidimensional. Lee un archivo binario de puntos,
+ *     construye el árbol con mejor agrupamiento espacial, y lo escribe a disco.
  * 
  * Proceso:
- * 1. Valida argumentos de línea de comandos (ruta archivo y N puntos)
- * 2. Lee N puntos en formato (x, y) del archivo binario
- * 3. Construye el R-Tree usando el algoritmo sortTileRecursive
- * 4. Escribe el árbol completo a un archivo binario .rtree con prefijo "str"
+ *     1. Valida argumentos de línea de comandos (ruta archivo y N puntos)
+ *     2. Lee N puntos en formato (x, y) del archivo binario
+ *     3. Convierte puntos a entradas del R-Tree (puntos degenerados)
+ *     4. Construye el R-Tree usando STR con profiling de tiempo
+ *     5. Escribe el árbol completo a un archivo binario .rtree con prefijo "str"
+ *     6. Reporta estadísticas: cantidad de nodos, altura, tiempo de ejecución
  * 
- * @param  argc Cantidad de argumentos de línea de comandos (debe ser 3)
- * @param  argv Array de argumentos: argv[0]=programa, argv[1]=ruta archivo,
- *              argv[2]=cantidad de puntos a leer (N)
- * @return int  0 si se ejecutó exitosamente, 1 si hay errores
+ * Parámetros de entrada:
+ *     argc (int): Cantidad de argumentos de línea de comandos (debe ser 3)
+ *     argv (char**): Array de argumentos:
+ *         argv[0] = nombre del programa
+ *         argv[1] = ruta del archivo binario de puntos (x, y en float)
+ *         argv[2] = cantidad de puntos a leer (N)
+ * 
+ * Salida:
+ *     Imprime en stdout:
+ *         - Cantidad de puntos leídos
+ *         - Cantidad total de nodos creados
+ *         - Índice de la raíz
+ *         - Tiempo de construcción en microsegundos (DURATION_MICROSECONDS)
+ *         - Nombre del archivo de salida generado
+ * 
+ * Retorna (Salida):
+ *     int: 0 si se ejecutó exitosamente, 1 si hay errores en parámetros o I/O
  */
 int main(int argc, char *argv[]) {
   /*

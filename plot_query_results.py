@@ -13,11 +13,29 @@ import matplotlib
 matplotlib.use('TkAgg')  # Usar backend no interactivo
 import matplotlib.pyplot as plt
 from pathlib import Path
+from typing import List, Tuple, Optional
 
-def extract_query_data(filepath):
+def extract_query_data(filepath: str) -> List[Tuple[float, float, float, float, float]]:
     """
-    Extrae los datos de consulta del archivo.
-    Retorna listas de (s, lecturas_promedio, puntos_promedio, lecturas_std, puntos_std).
+    Extrae datos de consultas desde un archivo de resultados.
+    
+    Descripción:
+        Lee un archivo de resultados de consultas y extrae los valores medidos
+        para cada parámetro de búsqueda 's'. Para cada 's', se extraen las
+        métricas promedio y desviación estándar de lecturas a disco y puntos
+        encontrados.
+    
+    Parámetros de entrada:
+        filepath (str): Ruta del archivo de consultas a procesar.
+    
+    Retorna (Salida):
+        List[Tuple[float, float, float, float, float]]: Lista de tuplas donde
+        cada tupla contiene:
+            - s: Parámetro de búsqueda (float)
+            - lecturas_promedio: Promedio de lecturas a disco (float)
+            - puntos_promedio: Promedio de puntos encontrados (float)
+            - lecturas_std: Desviación estándar de lecturas (float)
+            - puntos_std: Desviación estándar de puntos (float)
     """
     data = []
     try:
@@ -48,11 +66,23 @@ def extract_query_data(filepath):
         print(f"Error leyendo {filepath}: {e}")
     return data
 
-def parse_query_filename(filename):
+def parse_query_filename(filename: str) -> Tuple[Optional[str], Optional[str]]:
     """
-    Extrae el tipo y algoritmo del nombre del archivo.
-    Formato: {algoritmo}-{dataset}.query
-    Ejemplos: nearest-x-random.query, sort-tile-recursive-europa.query
+    Extrae el algoritmo y conjunto de datos del nombre del archivo.
+    
+    Descripción:
+        Parsea el nombre de archivo siguiendo el patrón "{algoritmo}-{dataset}.query"
+        para extraer el algoritmo utilizado y el tipo de dataset procesado.
+    
+    Parámetros de entrada:
+        filename (str): Nombre del archivo a parsear.
+                       Ejemplos válidos: nearest-x-random.query,
+                                       sort-tile-recursive-europa.query
+    
+    Retorna (Salida):
+        Tuple[Optional[str], Optional[str]]: Tupla con (algoritmo, dataset) donde:
+            - algoritmo (str|None): Nombre del algoritmo o None si no coincide
+            - dataset (str|None): Tipo de dataset (random/europa) o None si no coincide
     """
     match = re.match(r'([a-z\-]+)-(random|europa)\.query', filename)
     if match:
@@ -61,7 +91,25 @@ def parse_query_filename(filename):
         return algoritmo, dataset
     return None, None
 
-def main():
+def main() -> None:
+    """
+    Función principal que genera gráficos de resultados de consultas.
+    
+    Descripción:
+        Lee archivos de resultados de consultas de la carpeta 'query/',
+        extrae datos para diferentes combinaciones de algoritmo-dataset,
+        y genera dos gráficos comparativos:
+        1. Lecturas a disco en función del parámetro 's'
+        2. Cantidad de puntos encontrados en función de 's'
+    
+    Parámetros de entrada:
+        Ninguno. Utiliza datos de archivos en la carpeta 'query/'.
+    
+    Salida:
+        - Imprime mensajes de progreso en consola
+        - Genera archivo: query_results.png
+        - Muestra gráfico interactivo en pantalla
+    """
     # Usar ruta relativa desde el directorio actual
     query_dir = Path('query')
     

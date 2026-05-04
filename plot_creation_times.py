@@ -13,11 +13,22 @@ import matplotlib
 matplotlib.use('TkAgg')
 import matplotlib.pyplot as plt
 from pathlib import Path
+from typing import Optional, Dict, List
 
-def extract_creation_time(filepath):
+def extract_creation_time(filepath: str) -> Optional[int]:
     """
-    Extrae el tiempo de creación en microsegundos del archivo de salida.
-    Retorna el tiempo en microsegundos o None si no lo encuentra.
+    Extrae el tiempo de creación de un R-Tree desde un archivo de resultado.
+    
+    Descripción:
+        Lee un archivo de salida de construcción de R-Tree y extrae el tiempo
+        total de ejecución en microsegundos usando la etiqueta DURATION_MICROSECONDS.
+    
+    Parámetros de entrada:
+        filepath (str): Ruta del archivo de resultado a procesar.
+    
+    Retorna (Salida):
+        Optional[int]: Tiempo de construcción en microsegundos, o None si no se
+                      puede extraer la métrica del archivo.
     """
     try:
         with open(filepath, 'r') as f:
@@ -30,11 +41,23 @@ def extract_creation_time(filepath):
         print(f"Error leyendo {filepath}: {e}")
     return None
 
-def parse_filename(filename):
+def parse_filename(filename: str) -> tuple:
     """
-    Extrae el tipo y N del nombre del archivo.
-    Formato: {tipo}.n{N}
-    Donde tipo puede ser: random-near, random-str, europa-near, europa-str
+    Extrae el tipo de configuración y cantidad de elementos del nombre del archivo.
+    
+    Descripción:
+        Parsea el nombre del archivo siguiendo el patrón "{tipo}.n{N}"
+        donde tipo indica la combinación de dataset y algoritmo usado.
+    
+    Parámetros de entrada:
+        filename (str): Nombre del archivo a parsear.
+                       Formato esperado: {tipo}.n{N}
+                       Ejemplo: random-near.n1024, europa-str.n16777216
+    
+    Retorna (Salida):
+        tuple: Tupla con (tipo, n) donde:
+            - tipo (str|None): Configuración (random-near/random-str/europa-near/europa-str) o None
+            - n (int|None): Cantidad de puntos procesados, o None si no coincide
     """
     match = re.match(r'([a-z\-]+)\.n(\d+)', filename)
     if match:
@@ -43,7 +66,24 @@ def parse_filename(filename):
         return tipo, n
     return None, None
 
-def main():
+def main() -> None:
+    """
+    Función principal que genera gráficos de tiempos de creación de R-Trees.
+    
+    Descripción:
+        Lee archivos de resultado de construcción de R-Trees desde la carpeta
+        'creation/', extrae tiempos de creación para diferentes combinaciones
+        de algoritmo-dataset-tamaño, y genera un gráfico comparativo mostrando
+        el tiempo de construcción en función de N (cantidad de puntos).
+    
+    Parámetros de entrada:
+        Ninguno. Utiliza datos de archivos en la carpeta 'creation/'.
+    
+    Salida:
+        - Imprime mensajes de progreso en consola
+        - Genera archivo: creation_times.png
+        - Muestra gráfico interactivo en pantalla
+    """
     creation_dir = Path(r'./creation')
     
     # Diccionarios para almacenar datos por tipo

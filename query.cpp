@@ -172,6 +172,29 @@ void searchRectangle(std::fstream *file, int node_pos, const MBR &search_rect,
   }
 }
 
+/**
+* @function generate_squares
+* @brief Genera conjuntos de cuadrados (MBRs) de diferentes tamaños para consultas.
+* 
+* Descripción:
+*     Crea 5 conjuntos de cuadrados, cada uno con un tamaño de lado 's' diferente.
+*     Para cada tamaño 's', se generan 100 cuadrados con posiciones aleatorias
+*     dentro del rango [0, 1] x [0, 1]. Los cuadrados se usan como rectángulos
+*     de búsqueda para realizar consultas de rango en el R-Tree.
+* 
+* Parámetros de entrada:
+*     Ninguno (usa generador aleatorio interno).
+* 
+* Retorna (Salida):
+*     std::vector<std::vector<MBR>>: Estructura con 5 vectores, donde:
+*         - Cada vector contiene 100 MBRs
+*         - Los índices corresponden a los valores s: [0.0025, 0.005, 0.01, 0.025, 0.05]
+*         - Cada MBR es un cuadrado con lado de longitud s
+* 
+*     Estructura de datos retornada:
+*         all_squares[i][j] = MBR del j-ésimo cuadrado para el tamaño s_values[i]
+*         donde all_squares[i] contiene 100 cuadrados y hay 5 vectores en total
+*/
 std::vector<std::vector<MBR>> generate_squares() {
     // Definición de los posibles largos de lado (s)
     const std::vector<float> s_values = {0.0025f, 0.005f, 0.01f, 0.025f, 0.05f};
@@ -219,16 +242,34 @@ FUNCIÓN PRINCIPAL
 
 /**
  * @function main
- * @brief Función principal que realiza una búsqueda de puntos en el R-Tree
- *        dentro de un rectángulo especificado.
+ * @brief Realiza búsquedas de rango en un R-Tree y reporta métricas de rendimiento.
  * 
- * Proceso:
- * 1. Abre el archivo binario del R-Tree "nearest-x.rtree"
- * 2. Define un rectángulo de búsqueda [0.3-0.4] x [0.3-0.4]
- * 3. Realiza búsqueda recursiva desde la raíz
- * 4. Imprime los puntos encontrados en formato CSV
+ * Descripción:
+ *     Abre un archivo binario de R-Tree y ejecuta múltiples consultas de rango
+ *     usando rectángulos de búsqueda de diferentes tamaños. Para cada tamaño,
+ *     genera 100 consultas aleatorias y recolecta estadísticas sobre:
+ *     - Cantidad de lecturas a disco realizadas
+ *     - Cantidad de puntos encontrados
+ *     
+ *     Calcula y reporta el promedio y desviación estándar de ambas métricas
+ *     para cada tamaño de consulta.
  * 
- * @return int  0 si se ejecutó exitosamente, 1 si no se pudo abrir el archivo
+ * Parámetros de entrada:
+ *     argc (int): Cantidad de argumentos de línea de comandos (debe ser 2)
+ *     argv (char**): Array de argumentos:
+ *         argv[0] = nombre del programa
+ *         argv[1] = ruta del archivo R-Tree a consultar (formato .rtree)
+ * 
+ * Salida:
+ *     Imprime en stdout para cada tamaño de consulta 's':
+ *         - s: Tamaño del lado del cuadrado de búsqueda
+ *         - result_lecturas_promedio: Promedio de accesos a disco
+ *         - result_lecturas_std: Desviación estándar de accesos a disco
+ *         - result_puntos_promedio: Promedio de puntos encontrados
+ *         - result_puntos_std: Desviación estándar de puntos encontrados
+ * 
+ * Retorna (Salida):
+ *     int: 0 si éxito, 1 si error en parámetros o apertura del archivo
  */
 int main(int argc, char *argv[]) {
   /*
