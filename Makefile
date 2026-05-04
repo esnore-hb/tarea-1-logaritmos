@@ -1,15 +1,13 @@
 CXX = g++
 FLAGS = -Wall -Wextra -Wpedantic -O3 -o
 
-.PHONY: all nearest str query clean plot-query
+.PHONY: all nearest str query clean
 
 all:
 	make nearest
 	make str
 	make query
-
-plot-query:
-	python3 plot_query_results.py
+	make bonus
 
 nearest:
 	$(CXX) nearest-x.cpp $(FLAGS) nearest-x.bin
@@ -19,6 +17,9 @@ str:
 
 query:
 	$(CXX) query.cpp $(FLAGS) query.bin
+
+bonus:
+	$(CXX) query_bonus.cpp $(FLAGS) query-bonus.bin
 
 clean:
 	@echo "--- Limpiando archivos generados ---"
