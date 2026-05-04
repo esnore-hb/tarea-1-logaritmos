@@ -66,6 +66,14 @@ sh test-query.sh
 
 Evalúa rendimiento con búsquedas de rango y genera métricas
 
+#### Bonus: Consultas con puntos específicos
+
+```bash
+sh test-bonus.sh
+```
+
+Ejecuta consultas con puntos adicionales y guarda resultados en CSV para visualización
+
 ### Paso 3: Visualizar resultados
 
 ```bash
@@ -74,6 +82,14 @@ python plot_query_results.py
 ```
 
 Genera dos gráficos PNG: `creation_times.png` y `query_results.png`
+
+#### Bonus: Visualizar puntos de consulta
+
+```bash
+python plot_bonus.py
+```
+
+Genera scatterplots de los puntos de consulta bonus para ambos algoritmos
 
 ### Limpiar
 
@@ -91,10 +107,13 @@ Elimina ejecutables, `.rtree` y gráficos `.png`
 ├── nearest-x.cpp           # Algoritmo Nearest-X
 ├── sort-tile-recursive.cpp # Algoritmo STR
 ├── query.cpp               # Búsquedas por rango
+├── query_bonus.cpp         # Búsquedas con puntos específicos (bonus)
 ├── plot_creation_times.py  # Gráfico de tiempos
 ├── plot_query_results.py   # Gráfico de consultas
+├── plot_bonus.py           # Scatterplot de puntos bonus
 ├── test-creation.sh        # Script de construcción
 ├── test-query.sh           # Script de consultas
+├── test-bonus.sh           # Script de consultas bonus
 └── data/                   # Datos binarios (descargar)
 ```
 
